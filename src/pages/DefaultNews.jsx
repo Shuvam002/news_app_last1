@@ -1,6 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import NewsCard from "../components/NewsCard";
 
 const DefaultNews = () => {
@@ -11,8 +9,12 @@ const DefaultNews = () => {
   useEffect(() => {
     const fetchDefaultNews = async () => {
       try {
-        const response = await axios.get(apiURL + apiKey);
-        const actualNews = response.data.articles.filter((item) => item.urlToImage != null);
+        const response = await fetch(apiURL + apiKey);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        const actualNews = data.articles.filter((item) => item.urlToImage != null);
         setNews(actualNews);
         console.log(actualNews);
       } catch (error) {
